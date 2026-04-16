@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>まちづくりゲーム</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="app">
+
+    <!-- ========== Welcome Screen ========== -->
+    <section id="screen-welcome" class="screen active">
+      <div class="welcome-container">
+        <div class="welcome-hero">
+          <div class="welcome-emoji-float">🏘️</div>
+          <h1 class="welcome-title">まちづくり<br>ゲーム</h1>
+          <p class="welcome-subtitle">あなたの「やりたい」が見えてくる</p>
+        </div>
+        <div class="welcome-form">
+          <div class="input-group">
+            <label for="nickname">ニックネーム</label>
+            <input type="text" id="nickname" placeholder="好きな名前でOK" maxlength="10" autocomplete="off">
+          </div>
+          <div class="input-group">
+            <label for="group-select">グループ番号</label>
+            <div class="group-selector">
+              <button class="group-btn" data-group="1">1</button>
+              <button class="group-btn" data-group="2">2</button>
+              <button class="group-btn" data-group="3">3</button>
+              <button class="group-btn" data-group="4">4</button>
+              <button class="group-btn" data-group="5">5</button>
+              <button class="group-btn" data-group="6">6</button>
+              <button class="group-btn" data-group="7">7</button>
+              <button class="group-btn" data-group="8">8</button>
+            </div>
+          </div>
+          <button id="btn-start" class="btn-primary" disabled>はじめる</button>
+        </div>
+        <p class="welcome-note">※ データはこのスマホの中だけに保存されます</p>
+      </div>
+    </section>
+
+    <!-- ========== How to Play Screen ========== -->
+    <section id="screen-howto" class="screen">
+      <div class="howto-container">
+        <h2 class="howto-title">遊び方</h2>
+        <div class="howto-steps">
+          <div class="howto-step">
+            <div class="howto-step-num">1</div>
+            <div class="howto-step-text">
+              <strong>施設が出てくる</strong>
+              <p>町に新しい施設が建つよ</p>
+            </div>
+          </div>
+          <div class="howto-step">
+            <div class="howto-step-num">2</div>
+            <div class="howto-step-text">
+              <strong>自分の役割を選ぶ</strong>
+              <p>「やりたい」で直感で選ぼう</p>
+            </div>
+          </div>
+          <div class="howto-step">
+            <div class="howto-step-num">3</div>
+            <div class="howto-step-text">
+              <strong>周りの人に聞く</strong>
+              <p>「私にはどれが合うと思う？」<br>聞いた答えを記録しよう</p>
+            </div>
+          </div>
+          <div class="howto-step">
+            <div class="howto-step-num">4</div>
+            <div class="howto-step-text">
+              <strong>結果を見る</strong>
+              <p>多くの人に聞くほど<br>結果がくわしくなる！</p>
+            </div>
+          </div>
+        </div>
+        <div class="howto-rule">
+          <span class="howto-rule-icon">💡</span>
+          <span>「できそう」じゃなくて<br><strong>「やりたい」</strong>で選んでね</span>
+        </div>
+        <button id="btn-howto-start" class="btn-primary">スタート！</button>
+      </div>
+    </section>
+
+    <!-- ========== Round: Self Select Screen ========== -->
+    <section id="screen-round" class="screen">
+      <div class="round-container">
+        <div class="round-header">
+          <div class="round-progress">
+            <div class="round-progress-bar">
+              <div class="round-progress-fill" id="progress-fill"></div>
+            </div>
+            <span class="round-progress-text" id="round-indicator">Round 1 / 4</span>
+          </div>
+        </div>
+        <div class="facility-card" id="facility-card">
+          <div class="facility-emoji" id="facility-emoji"></div>
+          <h2 class="facility-name" id="facility-name"></h2>
+          <p class="facility-announcement" id="facility-announcement"></p>
+        </div>
+        <p class="round-question">あなたがここで関わるなら？</p>
+        <div class="role-list" id="role-list">
+          <!-- Roles injected by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== Round: Peer Feedback Screen ========== -->
+    <section id="screen-peer" class="screen">
+      <div class="peer-container">
+        <div class="peer-header">
+          <div class="peer-badge" id="peer-badge">
+            <span class="peer-badge-icon">👟</span>
+            <span>聞きに行こう！</span>
+          </div>
+        </div>
+        <div class="peer-my-choice">
+          <p class="peer-my-label">あなたの選択</p>
+          <div class="peer-my-role" id="peer-my-role"></div>
+        </div>
+        <div class="peer-instruction">
+          <p class="peer-instruction-main">近くの<strong>誰か</strong>にスマホを見せて聞こう</p>
+          <p class="peer-instruction-quote">「この中で 私に合いそうなの<br>どれだと思う？」</p>
+        </div>
+        <p class="peer-input-label">相手が選んでくれた答えをタップ ↓</p>
+        <div class="role-list peer-role-list" id="peer-role-list">
+          <!-- Roles injected by JS -->
+        </div>
+        <div class="peer-counter" id="peer-counter">
+          <!-- Filled by JS -->
+        </div>
+        <div class="peer-actions">
+          <button id="btn-peer-another" class="btn-secondary" style="display:none">もう1人に聞く</button>
+          <button id="btn-peer-next" class="btn-primary" style="display:none">次へ</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== Results Screen ========== -->
+    <section id="screen-results" class="screen">
+      <div class="results-container">
+        <div class="results-header">
+          <h2 class="results-title">あなたのタイプ</h2>
+        </div>
+
+        <!-- Self Analysis -->
+        <div class="results-section">
+          <h3 class="results-section-title">
+            <span class="results-section-icon">🪞</span>
+            自分の目
+          </h3>
+          <div class="results-chart-wrapper">
+            <canvas id="chart-self" width="280" height="280"></canvas>
+          </div>
+          <div class="results-type-card" id="self-type-card">
+            <!-- Filled by JS -->
+          </div>
+        </div>
+
+        <!-- Peer Analysis -->
+        <div class="results-section" id="peer-results-section">
+          <h3 class="results-section-title">
+            <span class="results-section-icon">👥</span>
+            周りの目
+            <span class="peer-count-badge" id="peer-total-badge"></span>
+          </h3>
+          <div id="peer-results-content">
+            <!-- Filled by JS: either locked message or full results -->
+          </div>
+        </div>
+
+        <!-- Gap Analysis -->
+        <div class="results-section" id="gap-section" style="display:none">
+          <h3 class="results-section-title">
+            <span class="results-section-icon">💡</span>
+            ギャップ発見！
+          </h3>
+          <div class="gap-message" id="gap-message"></div>
+        </div>
+
+        <!-- Career Suggestions -->
+        <div class="results-section" id="career-section">
+          <h3 class="results-section-title">
+            <span class="results-section-icon">🚀</span>
+            こんな道で活躍する人が多い
+          </h3>
+          <div class="career-list" id="career-list"></div>
+        </div>
+
+        <!-- Peer Career (bonus) -->
+        <div class="results-section" id="peer-career-section" style="display:none">
+          <h3 class="results-section-title">
+            <span class="results-section-icon">🏆</span>
+            周りの目から見た適職
+          </h3>
+          <div class="career-list" id="peer-career-list"></div>
+        </div>
+
+        <div class="results-footer">
+          <p class="results-disclaimer">
+            これは「今日のあなたの傾向」であって決定じゃない。<br>
+            興味は変わるし、それでまったくOK！
+          </p>
+          <button id="btn-detail" class="btn-secondary">くわしく見る</button>
+          <button id="btn-restart" class="btn-ghost">もう一度やる</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== Detail Screen ========== -->
+    <section id="screen-detail" class="screen">
+      <div class="detail-container" id="detail-container">
+        <!-- Filled by JS -->
+      </div>
+      <div class="detail-footer">
+        <button id="btn-back-results" class="btn-secondary">← 結果に戻る</button>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
