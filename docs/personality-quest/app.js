@@ -709,5 +709,25 @@ function hexToRgba(hex, alpha) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
+// ========== アンビエントパーティクル生成 ==========
+function createAmbientParticles() {
+  const container = document.getElementById("ambientParticles");
+  if (!container) return;
+  const count = 24;
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement("div");
+    p.className = "particle" + (Math.random() < 0.25 ? " large" : "");
+    p.style.left = Math.random() * 100 + "%";
+    const duration = 12 + Math.random() * 18;
+    const delay = -Math.random() * duration;
+    p.style.animationDuration = duration + "s";
+    p.style.animationDelay = delay + "s";
+    container.appendChild(p);
+  }
+}
+
 // ========== 起動 ==========
-document.addEventListener("DOMContentLoaded", render);
+document.addEventListener("DOMContentLoaded", () => {
+  createAmbientParticles();
+  render();
+});
