@@ -561,11 +561,19 @@ function renderReveal(app) {
       ? `<div class="guess-match match">🎯 自分の予想と一致！自己理解度バッチリだね</div>`
       : `<div class="guess-match differ">💡 予想は <strong>${guessType.emoji} ${guessType.name}</strong> だったね。新しい一面の発見！</div>`;
 
+    const typeLetters = [...type.name].map((ch, i) =>
+      `<span class="letter" style="animation-delay:${0.3 + i * 0.08}s">${escapeHtml(ch)}</span>`
+    ).join("");
+
     div.innerHTML = `
+      <div class="reveal-flash"></div>
+      <div class="reveal-sparkles" id="revealSparkles"></div>
       <div class="reveal-result">
         <div class="reveal-buildup">あなたは...</div>
-        <div class="reveal-emoji" style="color:${type.color}">${type.emoji}</div>
-        <h1 class="reveal-typename" style="color:${type.color}">${type.name}</h1>
+        <div class="reveal-emoji-wrap">
+          <div class="reveal-emoji" style="color:${type.color}">${type.emoji}</div>
+        </div>
+        <h1 class="reveal-typename" style="color:${type.color}">${typeLetters}</h1>
         <p class="reveal-catchphrase">${escapeHtml(type.catchphrase)}</p>
         <div class="reveal-strengths">${strengthTags}</div>
         <div class="reveal-description">
@@ -577,7 +585,26 @@ function renderReveal(app) {
         </div>
       </div>
     `;
+
+    createRevealSparkles();
     document.getElementById("nextBtn").onclick = () => showStage("reflection");
+  }
+}
+
+function createRevealSparkles() {
+  const container = document.getElementById("revealSparkles");
+  if (!container) return;
+  const colors = ["gold", "purple", "blue", ""];
+  for (let i = 0; i < 30; i++) {
+    const s = document.createElement("div");
+    const colorClass = colors[Math.floor(Math.random() * colors.length)];
+    const sizeClass = Math.random() < 0.3 ? " large" : "";
+    s.className = ("sparkle " + colorClass + sizeClass).trim();
+    s.style.left = Math.random() * 100 + "%";
+    s.style.top = Math.random() * 100 + "%";
+    s.style.animationDelay = (Math.random() * 2) + "s";
+    s.style.animationDuration = (1.2 + Math.random() * 1.5) + "s";
+    container.appendChild(s);
   }
 }
 
@@ -642,11 +669,15 @@ function renderFinal(app) {
       <p class="stage-desc">クエスト完了！自分だけのカードができたよ</p>
     </div>
     <div class="final-card" id="finalCard">
+      <div class="final-card-corners" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+      </div>
       <div class="final-card-header">
-        <div style="font-size:60px">${type.emoji}</div>
+        <div class="final-card-badge">CASE CLOSED</div>
+        <div class="final-card-emoji" style="color:${type.color}">${type.emoji}</div>
         <div class="final-card-name">${escapeHtml(state.playerName)}</div>
-        <div class="final-card-type">${type.name} タイプ</div>
-        <div class="small mt-2">${escapeHtml(type.catchphrase)}</div>
+        <div class="final-card-type">${escapeHtml(type.name)} タイプ</div>
+        <div class="final-card-catch">${escapeHtml(type.catchphrase)}</div>
       </div>
       ${sections}
     </div>
@@ -709,5 +740,25 @@ function hexToRgba(hex, alpha) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
+// ========== アンビエントパーティクル生成 ==========
+function createAmbientParticles() {
+  const container = document.getElementById("ambientParticles");
+  if (!container) return;
+  const count = 24;
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement("div");
+    p.className = "particle" + (Math.random() < 0.25 ? " large" : "");
+    p.style.left = Math.random() * 100 + "%";
+    const duration = 12 + Math.random() * 18;
+    const delay = -Math.random() * duration;
+    p.style.animationDuration = duration + "s";
+    p.style.animationDelay = delay + "s";
+    container.appendChild(p);
+  }
+}
+
 // ========== 起動 ==========
-document.addEventListener("DOMContentLoaded", render);
+document.addEventListener("DOMContentLoaded", () => {
+  createAmbientParticles();
+  render();
+});
